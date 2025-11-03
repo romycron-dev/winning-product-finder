@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: winning_product_finder
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    environment:
+      PORT: 4000
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/winning_product_finder
+    env_file:
+      - server/.env.example
+    depends_on:
+      - db
+    ports:
+      - '4000:4000'
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://server:4000
+    env_file:
+      - web/.env.example
+    depends_on:
+      - server
+    ports:
+      - '3000:3000'
+
+volumes:
+  db-data:

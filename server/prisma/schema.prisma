@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String        @id @default(cuid())
+  email     String        @unique
+  createdAt DateTime      @default(now())
+  searches  SearchQuery[]
+}
+
+model SearchQuery {
+  id          String          @id @default(cuid())
+  user        User            @relation(fields: [userId], references: [id])
+  userId      String
+  query       String
+  filtersJSON Json
+  createdAt   DateTime        @default(now())
+  results     ProductResult[]
+}
+
+model ProductResult {
+  id               String   @id @default(cuid())
+  search           SearchQuery @relation(fields: [searchId], references: [id])
+  searchId         String
+  marketplace      String
+  externalId       String
+  title            String
+  imageUrl         String?
+  price            Float
+  rating           Float?
+  reviews          Int?
+  categoryPathJSON Json?
+  bsr              Int?
+  sellersCount     Int?
+  scoresJSON       Json
+  createdAt        DateTime @default(now())
+}
