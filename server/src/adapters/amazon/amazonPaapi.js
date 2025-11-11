@@ -70,7 +70,7 @@ function normalizeItems(items) {
         rating: item.ItemInfo?.CustomerReviews?.StarRating ?? null,
         reviews: item.ItemInfo?.CustomerReviews?.TotalReviewCount ?? null,
         categoryPath: item.BrowseNodeInfo?.BrowseNodes?.map(
-          (node: any) => node.DisplayName,
+          (node) => node.DisplayName,
         ).filter(Boolean),
         bestSellerRank:
           item.BrowseNodeInfo?.BrowseNodes?.[0]?.SalesRank ?? null,
